@@ -7,6 +7,7 @@ export default class LoginManagerButton extends Button {
     constructor(
         systemMenu,
         label,
+        iconName,
         loginManager,
         command,
         parameters = GLib.Variant.new('(b)', [true]),
@@ -15,7 +16,7 @@ export default class LoginManagerButton extends Button {
         cancellable = null,
         callback = null
     ) {
-        super(systemMenu, label);
+        super(systemMenu, label, iconName);
 
         this._loginManager = loginManager;
         this._command = command;
@@ -28,8 +29,8 @@ export default class LoginManagerButton extends Button {
 
     _execute() {
         if (!this._loginManager._proxy) {
-            throw new Error('No D-Bus proxy available');
-            // return;
+            console.error('[PowerOffOptions] No D-Bus proxy available for LoginManager');
+            return;
         }
 
         this._loginManager._proxy.call(

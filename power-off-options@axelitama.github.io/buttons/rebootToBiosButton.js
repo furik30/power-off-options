@@ -4,7 +4,7 @@ import CmdAsyncButton from './_cmdAsyncButton.js';
 export default class RebootToBiosButton extends CmdAsyncButton {
 
     constructor(systemMenu) {
-        super(systemMenu, _('Restart to BIOS'), ['systemctl', 'reboot', '--firmware-setup']);
+        super(systemMenu, _('Restart to BIOS'), 'system-reboot-symbolic', ['systemctl', 'reboot', '--firmware-setup']);
     }
 
 }

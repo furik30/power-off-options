@@ -2,9 +2,10 @@ import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
 export default class Button {
 
-    constructor(systemMenu, label) {
+    constructor(systemMenu, label, iconName = null) {
         this._systemMenu = systemMenu;
         this._label = label;
+        this._iconName = iconName;
 
         this._button = null;
         this._handler = null;
@@ -14,7 +15,12 @@ export default class Button {
         if (this._button !== null)
             return;
 
-        this._button = new PopupMenu.PopupMenuItem(this._label);
+        if (this._iconName) {
+            this._button = new PopupMenu.PopupImageMenuItem(this._label, this._iconName);
+        } else {
+            this._button = new PopupMenu.PopupMenuItem(this._label);
+        }
+
         this._handler = this._button.connect('activate', () => this._execute());
 
         this._systemMenu._systemItem.menu.addMenuItem(this._button, position);
@@ -39,6 +45,7 @@ export default class Button {
         this.removeButton();
         this._systemMenu = null;
         this._label = null;
+        this._iconName = null;
     }
     
 }

@@ -4,7 +4,7 @@ import LoginManagerButton from './_loginManagerButton.js';
 export default class SuspendThenHibernateButton extends LoginManagerButton {
 
     constructor(systemMenu, loginManager) {
-        super(systemMenu, _('Suspend then Hibernate'), loginManager, 'SuspendThenHibernate');
+        super(systemMenu, _('Suspend then Hibernate'), 'system-suspend-symbolic', loginManager, 'SuspendThenHibernate');
     }
 
 }
