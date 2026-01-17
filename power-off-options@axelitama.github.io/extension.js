@@ -68,16 +68,26 @@ export default class PowerOffOptions extends Extension {
 
         let menuItems = [];
         try {
+            // CRITICAL: If this key is missing (schema not updated), it throws or returns null
             const jsonStr = this._settings.get_string('menu-items');
-            menuItems = JSON.parse(jsonStr);
+            if (jsonStr) {
+                menuItems = JSON.parse(jsonStr);
+            }
         } catch (e) {
-            console.error('[PowerOffOptions] Failed to load menu-items:', e);
-            return;
+            console.error('[PowerOffOptions] Failed to load menu-items. Schema might be outdated.', e);
         }
 
-        if (!Array.isArray(menuItems)) {
-            console.error('[PowerOffOptions] menu-items is not an array');
-            return;
+        // Fallback if schema is empty/broken
+        if (!menuItems || !Array.isArray(menuItems) || menuItems.length === 0) {
+            console.warn('[PowerOffOptions] Using fallback menu items.');
+            // Default order
+            menuItems = [
+                {"id": "screen-off", "type": "system", "enabled": true},
+                {"id": "suspend", "type": "system", "enabled": true},
+                {"id": "hibernate", "type": "system", "enabled": true},
+                {"id": "reboot", "type": "system", "enabled": true},
+                {"id": "poweroff", "type": "system", "enabled": true}
+            ];
         }
 
         let position = 0;
@@ -88,41 +98,20 @@ export default class PowerOffOptions extends Extension {
             let instance = null;
 
             if (item.type === 'custom') {
-                instance = new CustomButton(this._systemMenu, item.name, item.icon_name || 'system-run-symbolic', item.command);
+                // No icon needed now
+                instance = new CustomButton(this._systemMenu, item.name, item.command);
             } else if (item.type === 'system') {
                 switch (item.id) {
-                    case 'screen-off':
-                        instance = new ScreenOffButton(this._systemMenu);
-                        break;
-                    case 'suspend':
-                        instance = new SuspendButton(this._systemMenu, this._loginManager);
-                        break;
-                    case 'hybrid-sleep':
-                        instance = new HybridSleepButton(this._systemMenu, this._loginManager);
-                        break;
-                    case 'suspend-then-hibernate':
-                        instance = new SuspendThenHibernateButton(this._systemMenu, this._loginManager);
-                        break;
-                    case 'hibernate':
-                        instance = new HibernationButton(this._systemMenu, this._loginManager);
-                        break;
-                    case 'reboot':
-                        instance = new RebootButton(this._systemMenu, this._loginManager);
-                        break;
-                    case 'soft-reboot':
-                        instance = new SoftRebootButton(this._systemMenu);
-                        break;
-                    case 'reboot-to-bios':
-                        instance = new RebootToBiosButton(this._systemMenu);
-                        break;
-                    case 'poweroff':
-                        instance = new PowerOffButton(this._systemMenu, this._loginManager);
-                        break;
-                    case 'settings':
-                        instance = new SettingsButton(this._systemMenu);
-                        break;
-                    default:
-                        console.warn(`[PowerOffOptions] Unknown system button id: ${item.id}`);
+                    case 'screen-off': instance = new ScreenOffButton(this._systemMenu); break;
+                    case 'suspend': instance = new SuspendButton(this._systemMenu, this._loginManager); break;
+                    case 'hybrid-sleep': instance = new HybridSleepButton(this._systemMenu, this._loginManager); break;
+                    case 'suspend-then-hibernate': instance = new SuspendThenHibernateButton(this._systemMenu, this._loginManager); break;
+                    case 'hibernate': instance = new HibernationButton(this._systemMenu, this._loginManager); break;
+                    case 'reboot': instance = new RebootButton(this._systemMenu, this._loginManager); break;
+                    case 'soft-reboot': instance = new SoftRebootButton(this._systemMenu); break;
+                    case 'reboot-to-bios': instance = new RebootToBiosButton(this._systemMenu); break;
+                    case 'poweroff': instance = new PowerOffButton(this._systemMenu, this._loginManager); break;
+                    case 'settings': instance = new SettingsButton(this._systemMenu); break;
                 }
             }
 
