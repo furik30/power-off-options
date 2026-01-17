@@ -1,49 +1,69 @@
-# Power Off Options
+# Power Off Options (Fork)
 
-[简体中文](READMEs/README_zh_cn.md) | [Français](READMEs/README_fr.md) | [Italiano](READMEs/README_it.md) |
-[Português Brasileiro](READMEs/README_pt_br.md) |
-[Pусский](READMEs/README_ru.md)
+[Pусский](READMEs/README_ru.md) | [Original Repository](https://github.com/axelitama/power-off-options)
 
-Power Off Options is a GNOME Shell extension that adds additional buttons to the Power Off dialog:
+A completely refactored fork of the **Power Off Options** GNOME Shell extension.
 
-- **Turn Off Screen** — Immediately turn off the monitor/display.
-- **Hybrid Sleep** — Suspend to RAM and also save system state to disk (safe on power loss).
-- **Suspend Then Hibernate** — Suspend the system to RAM and automatically hibernate after a timeout.
-- **Hibernate** — Save system state to disk and power off (slower to resume than suspend).
-- **Restart user space (Soft Reboot)** — Restart the user space without rebooting the entire system.
-- **Restart To BIOS** — Reboot directly into the system BIOS setup.
-- **Custom Commands** — Add your own custom commands through the preferences window. Custom commands allow you to add your own entries to the power menu with any shell command you want to execute.
+This project aims to modernize the codebase, unify the handling of system and custom buttons, and provide full **Wayland support** (including screen off functionality).
 
-<p align="center">
-  <img src="resources/en_1.png" alt="screenshot1"/>
-</p>
+## 🚀 Key Features (v2.0 Goals)
 
-## Requirements
+### 1. Unified Drag-and-Drop Interface
 
-- GNOME Shell;
-- the screen off function only works in X11, Wayland is not supported;
-- Hibernation, Hybrid Sleep and Reboot related options make use of `systemctl` respective commands and must be enabled and configured in your system to work properly.
+Unlike the original extension, which separated "Built-in" and "Custom" buttons, this fork treats **all buttons as equals**.
 
-## Installation
+- **Reorder Everything:** You can drag and drop _any_ button (Hibernate, Restart, Custom Scripts) to any position in the list.
+- **Toggle Visibility:** Easily enable or disable any button from a single list.
+- **GTK4 UI:** A modern, clean preferences window.
 
-Install from the GNOME Extensions website:  
-<https://extensions.gnome.org/extension/8189/power-off-options/> 
+### 2. Native Wayland Support
 
-Otherwise it can be installed manually:
+The original extension relied on `xset` to turn off the screen, which does not work on modern Wayland sessions (Fedora, Ubuntu, etc.).
 
-1. download or clone this repository;
-2. move into the extension directory;
-3. run:
-    - `make` to install the extension;
-    - `make uninstall` to uninstall the extension;
-4. restart GNOME Shell to apply the changes (e.g. log out and log back in).
+- **Direct Mutter Integration:** We use GNOME's internal API (`global.backend.get_monitor_manager()`) to turn off the screen instantly and reliably on Wayland, without external scripts.
 
-## Preferences
+### 3. Modern & Reliable Architecture
 
-You can enable or disable each button individually using the built-in preferences window:
+- **Single Source of Truth:** Configuration is stored in a unified JSON structure, preventing conflicts between settings.
+- **Clean Codebase:** Rewritten from scratch to follow modern GJS (GNOME JavaScript) standards.
 
-```bash
+## 🛠 Available Options
+
+- **Turn Off Screen** — Immediately turn off the monitor (Wayland & X11 supported).
+- **Hybrid Sleep** — Suspend to RAM + Disk (safe on power loss).
+- **Suspend then Hibernate** — Suspend now, hibernate automatically later.
+- **Hibernate** — Suspend to Disk (requires setup).
+- **Soft Reboot** — Restart userspace only (faster than full reboot).
+- **Restart to UEFI/BIOS** — Reboot directly into firmware setup.
+- **Custom Commands** — Add your own shell scripts or commands.
+
+## 🔧 Installation
+
+### From Source
+
+1. Clone this repository:
+    ```
+    git clone -b develop https://github.com/furik30/power-off-options.git
+    ```
+2. Install using the Makefile:
+    ```
+    make install
+    ```
+3. Log out and log back in (or restart GNOME Shell).
+4. Enable the extension via **Extensions** app.
+
+## ⚙️ Configuration
+
+Open the extension settings:
+
+```
 gnome-extensions prefs power-off-options@axelitama.github.io
 ```
 
-The same window is also accessible from the **GNOME Extensions** application.
+Or click the **"Settings"** button inside the Power Off menu itself.
+
+## 🤝 Contributing
+
+This is a fork focused on stability and modern features. If you find a bug specific to Wayland or the new drag-and-drop system, please open an issue in this repository.
+
+Credits to **@axelitama** for the original idea and extension.
