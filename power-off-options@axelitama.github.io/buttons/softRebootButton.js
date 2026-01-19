@@ -4,7 +4,7 @@ import CmdAsyncButton from './_cmdAsyncButton.js';
 export default class SoftRebootButton extends CmdAsyncButton {
 
     constructor(systemMenu) {
-        super(systemMenu, _('Restart user space (Soft Reboot)'), ['systemctl', 'soft-reboot']);
+        super(systemMenu, _('Restart user space (Soft Reboot)'), 'system-reboot-symbolic', ['systemctl', 'soft-reboot']);
     }
 
 }

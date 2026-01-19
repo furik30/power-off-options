@@ -1,5 +1,4 @@
-*.compiled
-*.zip
-*.mo
+.mo
 description.txt
 note
+.private/

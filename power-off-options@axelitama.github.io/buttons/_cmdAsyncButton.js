@@ -7,6 +7,7 @@ export default class CmdAsyncButton extends Button {
     constructor(
         systemMenu,
         label,
+        iconName,
         command,
         workingDir = null,
         env = null,
@@ -14,7 +15,7 @@ export default class CmdAsyncButton extends Button {
         setup = null,
         user_data = null
     ) {
-        super(systemMenu, label);
+        super(systemMenu, label, iconName);
         
         this._command = command;
         this._workingDir = workingDir;
